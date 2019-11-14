@@ -13,17 +13,68 @@ router.get('/', (req, res) => {
 
 router.get('/popular', (req, res) => {
   const requestURL = composeTMDbURL('movie/popular')
-  https.get(requestURL, response => {
 
-    if (isError(response)) return res.status(res.statusCode)
+  // Hit the TMDb api
+  https.get(requestURL, tmbdResponse => {
+    
+    // If something goes wron with the request, return a 400
+    if (isError(tmbdResponse)) return tmbdResponse.status(tmbdResponse.statusCode)
 
     let data = ''
-    response.on('data', chunk => {
+    tmbdResponse.on('data', chunk => {
       data += chunk
     })
-    response.on('end', () => res.json(JSON.parse(data).results))
+    // Return the results as json
+    tmbdResponse.on('end', () => {
+      const json = JSON.parse(data)
+      if (json.results.length === 0) {
+        res.status(400)
+      } else {
+        res.json(json.results)
+      }
+    })
   })
   // res.send(`You're gonna be popular! I'll teach you the proper poise, When you talk to boys, Little ways to flirt and flounce,`)
+})
+
+// Get the queried movie
+// test with: 'Harry Poter'
+// test with: 'qwertyuiop'
+router.get('/search/:query', (req, res) => {
+  const requestURL = composeTMDbURL(`search/movie`, ['language=en-US', `query=${req.params.query}`, 'page=1', 'include_adult=false'])
+  https.get(requestURL, tmbdResponse => {
+    if (isError(tmbdResponse)) return res.status(tmbdResponse.statusCode)
+    let data = ''
+    tmbdResponse.on('data', chunk => {
+      data += chunk
+    })
+    tmbdResponse.on('end', () => {
+      const json = JSON.parse(data)
+      if(json.results.length === 0) {
+        res.status(400)
+      } else {
+        res.json(json.results)
+      }
+    })
+  })
+})
+
+// test with: 671 // Harry Potter and the Philosopher's Stone
+// test with 1 // 400 response
+router.get('/:movieId', (req, res) => {
+  const requestURL = composeTMDbURL(`movie/${req.params.movieId}`, ['language=en-US', 'include_adult=false'])
+  https.get(requestURL, tmbdResponse => {
+    console.log(requestURL)
+    if (isError(tmbdResponse)) return res.status(tmbdResponse.statusCode)
+    let data = ''
+    tmbdResponse.on('data', chunk => {
+      data += chunk
+    })
+    tmbdResponse.on('end', () => {
+      const json = JSON.parse(data)
+      res.json(json)
+    })
+  })
 })
 
 module.exports = router;
@@ -32,10 +83,11 @@ module.exports = router;
 
 // Params: body of request (string)
 // Reurn: full request url
-function composeTMDbURL(body) {
+function composeTMDbURL(body, params = []) {
   const key = process.env.TMDB_API_KEY;
   const baseRoute = `https://api.themoviedb.org/3/`;
-  return `${baseRoute}${body}?api_key=${key}`
+  const paramsString = !!params ? `&${ params.join('&') }` : ``
+  return `${baseRoute}${body}?api_key=${key}${paramsString}`
 }
 
 // Params: respones : HTTPRequest
