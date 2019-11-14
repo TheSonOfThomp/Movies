@@ -13,7 +13,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-// We only have the movies route, but in case we need more in the future...
+// We only have one route for now
 app.use('/movie', movieRouter);
 
 module.exports = app;
