@@ -17,7 +17,7 @@ router.get('/popular', (req, res) => {
   // Hit the TMDb api
   https.get(requestURL, tmbdResponse => {
     
-    // If something goes wron with the request, return a 400
+    // If something goes wrong with the request, return a 400
     if (isError(tmbdResponse)) return tmbdResponse.status(tmbdResponse.statusCode)
 
     let data = ''
@@ -64,7 +64,6 @@ router.get('/search/:query', (req, res) => {
 router.get('/:movieId', (req, res) => {
   const requestURL = composeTMDbURL(`movie/${req.params.movieId}`, ['language=en-US', 'include_adult=false'])
   https.get(requestURL, tmbdResponse => {
-    console.log(requestURL)
     if (isError(tmbdResponse)) return res.status(tmbdResponse.statusCode)
     let data = ''
     tmbdResponse.on('data', chunk => {
