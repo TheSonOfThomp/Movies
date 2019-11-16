@@ -1,0 +1,20 @@
+li.movie-list-item-wrapper {
+  position: relative;
+  list-style-type: none;
+  padding: 16px;
+  background-color: var(--cyan-darker);
+  background-repeat: no-repeat;
+  background-size: cover;
+  border-radius: 4px;
+  box-shadow: var(--shadow-2);
+  min-height: 128px;
+  
+  
+  h3 {
+    font-size: 1.25rem;
+    margin: 0.25em;
+    z-index: 1;
+    color: var(--white);
+    text-shadow: 0px 0px 3px rgba(0,0,0,1)
+  }
+}

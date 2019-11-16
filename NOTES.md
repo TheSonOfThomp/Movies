@@ -44,7 +44,7 @@
 # Planning
 
 1. Setup boilerplate backend with `npx express-generator api`
-    - Remove default routes, so we only have only `/movies`
+    - Remove default routes, so we only have only `/movie`
 2. Setup boilerplate frontend with `npx create-react-app client`
 
 3. Build out basic `GET` requests on the back end
