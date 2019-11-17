@@ -1,17 +1,27 @@
 import React from 'react';
 import PropTypes from 'prop-types';
+import {
+  Link
+} from "react-router-dom";
 import './MovieListItem.scss'
-const imgBase = 'https://image.tmdb.org/t/p/w500'
+import { getImgURL } from '../../utils/utils';
+
 
 const MovieListItem = (props) => {
-  const imgURL = `${imgBase}${props.movie.backdrop_path}`
+  const imgURL = getImgURL(props.movie.backdrop_path)
   return (
   <li className="movie-list-item-wrapper"
-    style={{backgroundImage: `url(${imgURL})`}}
+    // style={{ backgroundImage: `url(${imgURL})` }}
   >
-    <h3>
-      {props.movie.title}
-    </h3>
+    <Link to={`/details/${props.movie.id}`}
+    >
+      <h3>
+        {props.movie.title}
+      </h3>
+      {props.movie.backdrop_path &&
+        <img className="movie-list-bg_img" src={imgURL} alt={props.movie.title}/>
+      }
+    </Link>
   </li>
 )};
 

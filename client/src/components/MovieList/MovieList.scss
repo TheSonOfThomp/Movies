@@ -1,4 +1,10 @@
 .movie-list-wrapper {
+  box-sizing: border-box;
+  margin: auto;
+  padding: 8px 24px;
+  width: 100%;
+  max-width: var(--max-width);
+
   ul {
     padding: 0;
     display: grid;

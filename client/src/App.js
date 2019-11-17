@@ -1,16 +1,21 @@
 import React, {useState, useEffect } from 'react';
-import MovieList from './components/MovieList';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+} from "react-router-dom";
 import axios from 'axios';
+import MovieList from './components/MovieList';
+import MovieDetails from './components/MovieDetails/MovieDetails';
 import './styles/main.scss';
+import { composeURL } from './utils/utils';
+import Header from './components/Header/Header';
 
-const composeURL = (body) => {
-  const baseURL = 'http://localhost:5555'
-  return `${baseURL}/${body}`
-}
 
 const App = () => {
   const [moviesList, setMoviesList] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
+  const [selectedMovie, setSelectedMovie] = useState()
 
   useEffect(() => {
     if (moviesList.length === 0) {
@@ -23,6 +28,7 @@ const App = () => {
 
   const handleInput = ($event) => {
     const query = $event.target.value
+    console.log(query)
     setSearchQuery(query)
     if(query.length === 0) {
       getPopularMovies()
@@ -39,7 +45,9 @@ const App = () => {
     })
   }
 
+  // TODO : debounce this
   const searchForMovie = (queryString) => {
+    console.log(queryString)
     const searchQueryUrl = composeURL(`movie/search/${queryString}`)
     axios.get(searchQueryUrl).then(resp => {
       console.log(resp.data)
@@ -49,21 +57,36 @@ const App = () => {
 
   return (
     <div className="app">
-      <header>
-        <h1>The Movie Database</h1>
-        <input 
-          type="text" 
-          placeholder="Find a movie..."
-          value={searchQuery}
-          onChange={handleInput}
-        ></input>
-      </header>
-      <main>
-        <h2>{searchQuery ? `'${searchQuery}'` : 'Popular movies'}</h2>
-        <MovieList
-          movies={moviesList}
-        />
-      </main>
+      <Router>
+        <Switch>
+          
+          <Route path="/details/:id">
+            <Header
+              title="The Movie Database"
+            />
+            <main>
+              <MovieDetails
+                movie={selectedMovie}
+              />
+            </main>
+          </Route>
+
+          <Route path="/">
+            <Header
+              title="The Movie Database"
+              isSearchBarVisible={true}
+              searchQuery={searchQuery}
+              handleInput={handleInput}
+            />
+            <main>
+              <MovieList
+                title={searchQuery ? `'${searchQuery}'` : 'Popular movies'}
+                movies={moviesList}
+              />
+            </main>
+          </Route>
+        </Switch>
+      </Router>
     </div>
   );
 }

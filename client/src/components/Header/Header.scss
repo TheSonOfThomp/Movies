@@ -1,0 +1,37 @@
+header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background-color: var(--color-primary-dark);
+  color: var(--white);
+  margin: 0;
+  padding: 8px 24px;
+  box-shadow: var(--shadow-3);
+  
+  .header-content {
+    width: 100%;
+    max-width: var(--max-width);
+    margin: auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    
+    h1 {
+      display: inline-block;
+      a {
+        color: var(--white);
+        text-decoration: none;
+      }
+    }
+    input[type=text] {
+      font-size: 16px;
+      height: 1.5em;
+      padding: 4px;
+  
+      &::placeholder{
+        color: var(--color-primary-dark);
+        opacity: 0.75;
+      }
+    }
+  }
+}
