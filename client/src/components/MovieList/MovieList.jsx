@@ -24,8 +24,4 @@ MovieList.propTypes = {
   movies: PropTypes.array
 };
 
-MovieList.defaultProps = {
-  // bla: 'test',
-};
-
 export default MovieList;

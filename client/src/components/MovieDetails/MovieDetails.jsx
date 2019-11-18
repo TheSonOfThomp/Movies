@@ -13,15 +13,11 @@ import './MovieDetails.scss';
 import Vibrant from 'node-vibrant'
 import MovieListItem from '../MovieListItem/MovieListItem';
 
-
-// A user can click on a movie in the list and be taken to a page that displays more details for the movie 
-// (title, movie poster, release date, cast, synopsis, etc)
-
 const MovieDetails = () => {
 
   const [movie, setMovie] = useState('')
   const [backgroundColor, setBackgroundColor] = useState('')
-  const { id } = useParams()
+  const { id } = useParams() // get the movie id from the URL
 
   const getMovie = (id) => {
     axios.get(composeURL(`movie/${id}`)).then(resp => {
@@ -33,11 +29,10 @@ const MovieDetails = () => {
   }
   
   useEffect(() => {
-
     // if the movie var doesn't exist, 
     // or is different from the url param, get new data.
-    // TODO add a loading spinner
     if (!movie || (movie.id !== parseInt(id) )) {
+      // doesn't necessarily need to be debounced but I added this for testing so I'll keep it
       _.debounce(getMovie, 100)(id)
     }
     return () => {};
@@ -45,7 +40,7 @@ const MovieDetails = () => {
   
   return (
     <div className="movie-details-wrapper"
-      style={{ backgroundColor: backgroundColor}}
+      style={{ backgroundColor: backgroundColor}} // custom bg color
     >
       <img 
         className="backdrop_image" 
@@ -53,6 +48,10 @@ const MovieDetails = () => {
         alt=""
         role="presentation"
       />
+      {/* 
+        Ideally the image shouldn't go before the content (for a11y reasons)
+        but since it's a presentational image, it should be fine. ()
+      */}
       <div className="movie-details-header">
         <div className="movie-details">
           <div className="movie-title">
@@ -69,7 +68,6 @@ const MovieDetails = () => {
             <h3>Summary</h3>
             <p>{movie.overview}</p>
           </div>
-          
         </div>
 
         <h3>Top Cast</h3>
@@ -77,6 +75,7 @@ const MovieDetails = () => {
           {movie.cast &&
             movie.cast.slice(0, 9).map(person => {
               return (
+                // TODO: This should be its own component, similar to MovieListItem
                 <div className="cast-member" key={person.cast_id}>
                   <span className="cast-member-image">
                     <img src={getImgURL(person.profile_path)} alt={person.name} />

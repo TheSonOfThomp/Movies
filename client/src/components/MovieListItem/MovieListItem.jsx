@@ -10,11 +10,9 @@ import { getImgURL } from '../../utils/utils';
 const MovieListItem = (props) => {
   const imgURL = getImgURL(props.movie.backdrop_path)
   return (
-  <li className="movie-list-item-wrapper"
-    // style={{ backgroundImage: `url(${imgURL})` }}
-  >
-    <Link to={`/details/${props.movie.id}`}
-    >
+  <li className="movie-list-item-wrapper">
+    {/* Set the url to the selected movie */}
+    <Link to={`/details/${props.movie.id}`}> 
       <h3>
         {props.movie.title}
       </h3>
@@ -25,12 +23,10 @@ const MovieListItem = (props) => {
   </li>
 )};
 
+// TODO: get more specific with what the object looks like
 MovieListItem.propTypes = {
   movie: PropTypes.object,
 };
 
-MovieListItem.defaultProps = {
-  // bla: 'test',
-};
 
 export default MovieListItem;

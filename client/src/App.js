@@ -43,8 +43,8 @@ const App = () => {
     })
   }
 
-  // TODO : debounce this
   const searchForMovie = (queryString) => {
+    // TODO : debounce this function (see MovieDetails for a debounce example)
     const searchQueryUrl = composeURL(`movie/search/${queryString}`)
     axios.get(searchQueryUrl).then(resp => {
       setMoviesList(resp.data)
@@ -53,11 +53,9 @@ const App = () => {
 
 
   return (
-    <div className="app" 
-    >
+    <div className="app" >
       <Router>
         <Switch>
-          
           <Route path="/details/:id">
             <Header
               title="The Movie Database"
@@ -68,11 +66,15 @@ const App = () => {
           </Route>
 
           <Route path="/">
+            {/* 
+                The header components are separate from the page components
+                in order to keep the header-related logic in the App.js file instead of in the header.
+            */}
             <Header
               title="The Movie Database"
               isSearchBarVisible={true}
               searchQuery={searchQuery}
-              handleInput={handleInput}
+              handleInput={handleInput} // <- TODO: This should be a hook within the Header component
             />
             <main>
               <MovieList

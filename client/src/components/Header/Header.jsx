@@ -38,7 +38,7 @@ Header.propTypes = {
   title: PropTypes.string,
   isSearchBarVisible: PropTypes.bool,
   searchQuery: PropTypes.string,
-  handleInput: PropTypes.func
+  handleInput: PropTypes.func 
 };
 
 Header.defaultProps = {
