@@ -15,20 +15,18 @@ import Header from './components/Header/Header';
 const App = () => {
   const [moviesList, setMoviesList] = useState([])
   const [searchQuery, setSearchQuery] = useState('')
-  const [selectedMovie, setSelectedMovie] = useState()
 
   useEffect(() => {
     if (moviesList.length === 0) {
       getPopularMovies()
     }
-
+    
     // cleanup
     return () => {};
   })
 
   const handleInput = ($event) => {
     const query = $event.target.value
-    console.log(query)
     setSearchQuery(query)
     if(query.length === 0) {
       getPopularMovies()
@@ -47,16 +45,16 @@ const App = () => {
 
   // TODO : debounce this
   const searchForMovie = (queryString) => {
-    console.log(queryString)
     const searchQueryUrl = composeURL(`movie/search/${queryString}`)
     axios.get(searchQueryUrl).then(resp => {
-      console.log(resp.data)
       setMoviesList(resp.data)
     })
   }
 
+
   return (
-    <div className="app">
+    <div className="app" 
+    >
       <Router>
         <Switch>
           
@@ -65,9 +63,7 @@ const App = () => {
               title="The Movie Database"
             />
             <main>
-              <MovieDetails
-                movie={selectedMovie}
-              />
+              <MovieDetails/>
             </main>
           </Route>
 

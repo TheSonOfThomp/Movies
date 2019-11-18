@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import PropTypes from 'prop-types';
 import {
   useParams
 } from "react-router-dom";
@@ -18,7 +17,7 @@ import MovieListItem from '../MovieListItem/MovieListItem';
 // A user can click on a movie in the list and be taken to a page that displays more details for the movie 
 // (title, movie poster, release date, cast, synopsis, etc)
 
-const MovieDetails = (props) => {
+const MovieDetails = () => {
 
   const [movie, setMovie] = useState('')
   const [backgroundColor, setBackgroundColor] = useState('')
@@ -38,7 +37,7 @@ const MovieDetails = (props) => {
     // if the movie var doesn't exist, 
     // or is different from the url param, get new data.
     // TODO add a loading spinner
-    if (!movie || (movie.id != id )) {
+    if (!movie || (movie.id !== parseInt(id) )) {
       _.debounce(getMovie, 100)(id)
     }
     return () => {};
@@ -48,7 +47,12 @@ const MovieDetails = (props) => {
     <div className="movie-details-wrapper"
       style={{ backgroundColor: backgroundColor}}
     >
-      <img className="backdrop_image" src={getImgURL(movie.backdrop_path, 'original')} role="presentation"/>
+      <img 
+        className="backdrop_image" 
+        src={getImgURL(movie.backdrop_path, 'original')} 
+        alt=""
+        role="presentation"
+      />
       <div className="movie-details-header">
         <div className="movie-details">
           <div className="movie-title">
@@ -84,33 +88,26 @@ const MovieDetails = (props) => {
           }
         </div>
 
-        <div className="related-movies-wrapper">
-        <h3>Related</h3>
-          <ul>
-          {movie.related &&
-            movie.related.slice(0, 3).map(related => {
-              return (
-                <MovieListItem 
-                  key={related.id}
-                  movie={related}
-                />
-              )
-            })
-          }
-          </ul>
-        </div>
+        {movie.related && movie.related.length > 0 && 
+          <div className="related-movies-wrapper">
+          <h3>Related</h3>
+            <ul>
+            {movie.related &&
+              movie.related.slice(0, 3).map(related => {
+                return (
+                  <MovieListItem 
+                    key={related.id}
+                    movie={related}
+                  />
+                )
+              })
+            }
+            </ul>
+          </div>
+        }
         <img className="poster_image" src={getImgURL(movie.poster_path)} alt={`${movie.title} poster`}/>
       </div>
     </div>
 )};
-
-MovieDetails.propTypes = {
-  movie: PropTypes.object,
-  
-};
-
-MovieDetails.defaultProps = {
-  // bla: 'test',
-};
 
 export default MovieDetails;
