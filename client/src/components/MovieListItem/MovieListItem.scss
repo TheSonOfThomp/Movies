@@ -2,6 +2,7 @@ $animation-time: 500ms;
 
 li.movie-list-item-wrapper {
   position: relative;
+  display: grid;
   list-style-type: none;
   background-color: var(--color-primary-dark);
   background-repeat: no-repeat;

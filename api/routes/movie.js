@@ -1,5 +1,4 @@
 const express = require('express');
-const https = require('https');
 const router = express.Router();
 const dotenv = require('dotenv');
 const axios = require('axios');
@@ -12,6 +11,8 @@ router.get('/', (req, res) => {
   res.send(`Welcome to ATMDb`);
 });
 
+// ENDPOINT
+// Returns an array of popular movies
 router.get('/popular', (req, res) => {
   const requestURL = composeTMDbURL('movie/popular')
   
@@ -29,11 +30,10 @@ router.get('/popular', (req, res) => {
       console.log(err)
       res.sendStatus(400);
     })
-
-  // res.send(`You're gonna be popular! I'll teach you the proper poise, When you talk to boys, Little ways to flirt and flounce,`)
 })
 
-// Get the queried movie list
+// ENDPOINT
+// Returns an array of movies that match the searhc results
 router.get('/search/:query', (req, res) => {
   const requestURL = composeTMDbURL(`search/movie`, ['language=en-US', `query=${req.params.query}`, 'page=1', 'include_adult=false'])
 
@@ -45,13 +45,14 @@ router.get('/search/:query', (req, res) => {
   })
 })
 
-// Since the default movie response doesn't give the cast or related movies
-// we need to send multiple requests to the API.
-
-// Ideally I'd add more params to the url, or different targets but this is good enough for a POC.
-
+// ENDPOINT
+// Returns an object for the given movie id
 router.get('/:movieId', (req, res) => {
   const requestURL = composeTMDbURL(`movie/${req.params.movieId}`, ['language=en-US', 'include_adult=false'])
+  
+  // Since the default movie response doesn't give the cast or related movies
+  // we need to send multiple requests to the API.
+  // Ideally I'd add more params to the url, or different endpoints but this is good enough for a POC.
   const castURL = composeTMDbURL(`movie/${req.params.movieId}/credits`, ['language=en-US'])
   const relatedURL = composeTMDbURL(`movie/${req.params.movieId}/similar`, ['language=en-US'])
 
@@ -73,33 +74,11 @@ router.get('/:movieId', (req, res) => {
 
 module.exports = router;
 
-// TODO - move to utils folder
-
-// Params: body of request (string)
-// Reurn: full request url
+// TODO - move to a utils folder
+// Takes the api endpoint stub and url params and returns the full api endpoint url
 function composeTMDbURL(body, params = []) {
   const key = process.env.TMDB_API_KEY;
   const baseRoute = `https://api.themoviedb.org/3/`;
   const paramsString = !!params ? `&${ params.join('&') }` : ``
   return `${baseRoute}${body}?api_key=${key}${paramsString}`
-}
-
-// Params: respones : HTTPRequest
-// Reurn: isError : Boolean
-function isError(res) {
-  const { statusCode } = res;
-  let error;
-  // Error handling
-  if (statusCode !== 200) {
-    error = new Error('Request Failed.\n' +
-      `Status Code: ${statusCode}`);
-  }
-  if (error) {
-    console.error(error.message);
-    // Consume response data to free up memory
-    res.resume();
-    return true;
-  } else {
-    return false
-  }
 }

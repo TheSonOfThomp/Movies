@@ -7,8 +7,10 @@ header {
   margin: 0;
   padding: 8px 24px;
   box-shadow: var(--shadow-3);
+  display: flex;
   
   .header-content {
+    align-self: center;
     width: 100%;
     max-width: var(--max-width);
     margin: auto;
@@ -18,19 +20,26 @@ header {
     
     h1 {
       display: inline-block;
+      font-size: 1.5rem;
       a {
         color: var(--white);
         text-decoration: none;
       }
     }
     input[type=text] {
-      font-size: 16px;
+      font-size: 1rem;
       height: 1.5em;
       padding: 4px;
   
       &::placeholder{
         color: var(--color-primary-dark);
         opacity: 0.75;
+      }
+    }
+
+    @media screen and (max-width: 512px) {
+      input[type=text] {
+        display: none;
       }
     }
   }

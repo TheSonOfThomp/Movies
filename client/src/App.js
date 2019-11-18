@@ -5,6 +5,7 @@ import {
   Route,
 } from "react-router-dom";
 import axios from 'axios';
+import _ from 'lodash'
 import MovieList from './components/MovieList';
 import MovieDetails from './components/MovieDetails/MovieDetails';
 import './styles/main.scss';
@@ -20,21 +21,22 @@ const App = () => {
     if (moviesList.length === 0) {
       getPopularMovies()
     }
-    
     // cleanup
     return () => {};
   })
 
+  // Triggers an api call to search for a search string, or reset the array
   const handleInput = ($event) => {
     const query = $event.target.value
     setSearchQuery(query)
     if(query.length === 0) {
-      getPopularMovies()
+      _.debounce(getPopularMovies, 50)()
     } else {
-      searchForMovie(query)
+      _.debounce(searchForMovie, 50)(query)
     }
   }
 
+  // Hits the 'popular' endpoint and sets the arrray of movies
   const getPopularMovies = () => {
     // TODO use localstorage to cache the popular movies so we don't have to hit the backend everytime
     const popularURL = composeURL('movie/popular')
@@ -43,6 +45,7 @@ const App = () => {
     })
   }
 
+  // Hits the 'search' endpoint and sets the array of movies
   const searchForMovie = (queryString) => {
     // TODO : debounce this function (see MovieDetails for a debounce example)
     const searchQueryUrl = composeURL(`movie/search/${queryString}`)
